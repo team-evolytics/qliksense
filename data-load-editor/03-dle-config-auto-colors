@@ -1,0 +1,33 @@
+// Config-Auto-Colors
+
+Temp_Variables_Transpose:
+CrossTable(Design_Type, Color, 1)
+LOAD
+	Variable_Name,
+    [Color Concord] as "Color Concord",
+    /*
+    [Color SBSEG] as "Color SBSEG",
+    [Color PCG] as "Color PCG",
+    [Color CG] as "Color CG"
+    */
+
+ FROM [$(v_Script_config_File)]
+(URL IS 
+[http://localhost:5555/data?connectorID=GoogleDriveConnector&table=GetWorksheetV2&encrypted_refresh_token=sta_gen_1%3alpIHyZYs77VPn4%2flkkV55Q%3d%3d%3aQvmCdOGWwyi1rK2uTcznTa9%2f9B5yqsIGZbrGLCXUy%2bT2RGyYimi%2fJ%2fC%2fK4GlgARwvCtfmthHisqbO8HLYDblebCbO1tBgxBx7jrtMz57zBBdjmPsd0iBVG2tHkuEKMJ6JqJvWLuvkcQQa3lpI5tilQ%3d%3d&worksheetKey=1RXZdtv6NlKtZ6faqJaUyIFolq4fqyE-8milTCJLuoPg%3a_2100294753&appID=]
+, qvx);   
+//Colors_Sheet
+
+Temp_Variables:
+Load Variable_Name,
+	 Color
+Resident Temp_Variables_Transpose
+where Design_Type='$(v_Design_Color_Type)';
+Drop Table Temp_Variables_Transpose;
+
+
+for i = 0 to NoOfRows('Temp_Variables') - 1
+
+  let vName 			= peek('Variable_Name', i, 'Temp_Variables'); // Name of the variable
+  let $(vName) 			= peek('Color', i, 'Temp_Variables');
+  
+next i
