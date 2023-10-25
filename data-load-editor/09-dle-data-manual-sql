@@ -1,0 +1,69 @@
+// DATA - Manual SQL
+
+LIB CONNECT TO 'Athena SBGAN Longtail';
+
+/* Initial Data Load Step or Refresh changes to source data */
+Main:
+
+Load *
+;
+
+SQL
+
+select * from dlprd.sbg_published.product_support_dashboard where fiscal_year>=2023;
+
+/* Store loaded data into QVD...this is like your data extract in Tableau */
+Store Main into [lib://Shared/0.ExtractQVD/CS_ProductSupport_ExecDashboard.qvd] (qvd);
+
+/* Switch over to pull from qvd to speed up config or updates that don't require data source structure updates */
+
+/*
+Main:
+Load
+*
+FROM [lib://Shared/0.ExtractQVD/CS_ProductSupport_ExecDashboard.qvd] (qvd);
+*/
+
+
+/* NEED TO UPDATE WITH fields from Superstore Data */
+WEEK:
+Load
+clndr_week_start_date,
+RowNo() as WeekRank,
+Count(clndr_week_start_date)
+Resident Main
+
+GROUP BY clndr_week_start_date
+ORDER BY clndr_week_start_date desc;
+
+MONTH:
+Load
+clndr_month_start_date,
+RowNo() as MonthRank,
+Count(clndr_month_start_date)
+Resident Main
+
+GROUP BY clndr_month_start_date
+ORDER BY clndr_month_start_date desc;
+
+
+LEFT JOIN(Main)
+Load 
+	clndr_week_start_date,
+    WeekRank
+     
+Resident WEEK
+Order by clndr_week_start_date;
+
+DROP TABLE WEEK;
+
+
+LEFT JOIN(Main)
+Load 
+	clndr_month_start_date,
+    MonthRank
+     
+Resident MONTH
+Order by clndr_month_start_date;
+
+DROP TABLE MONTH;
