@@ -1,0 +1,340 @@
+/////////////////////////////// ***************************************************************///////////////////////////////
+/////////////////////////////// ************************** Breakdown Expressions ******************************///////////////
+/////////////////////////////// ***************************************************************///////////////////////////////
+   
+CONFIG_KPI:
+LOAD *,
+     
+     /////////////// OVERVIEW KPI
+     
+      if(isnull(_KPI_COLOR_GREEN),chr(39) & '$(v_Color_KPI_Gray_230)' & chr(39) ,
+	 'if(isnull('&_KPI_EXP_ITPY%&'),v_Color_KPI_Gray_230,
+      if('&_KPI_EXP_ITPY%&_KPI_COLOR_GREEN &' ,v_Color_KPI_Green_Light,
+      if('&_KPI_EXP_ITPY%&_KPI_COLOR_YELLOW&', v_Color_KPI_Yellow_Light,
+      if('&_KPI_EXP_ITPY%&_KPI_COLOR_RED   &', v_Color_KPI_Red_Light,
+      v_Color_Chart_CY))))')
+      AS _KPI_COLOR_ITPY_BACK,
+     
+     if(isnull(_KPI_COLOR_GREEN),chr(39) & '$(v_Color_Chart_CY)' & chr(39) ,
+     'if(isnull('&_KPI_EXP_ITPY%&'),v_Color_KPI_Gray_123,
+      if('&_KPI_EXP_ITPY%&_KPI_COLOR_GREEN &', v_Color_KPI_Green,
+      if('&_KPI_EXP_ITPY%&_KPI_COLOR_YELLOW&', v_Color_KPI_Yellow,
+      if('&_KPI_EXP_ITPY%&_KPI_COLOR_RED   &', v_Color_KPI_Red,
+      v_Color_Chart_CY))))')
+      AS _KPI_COLOR_ITPY_FONT,      
+
+      if(isnull(_KPI_COLOR_GREEN),chr(39) & '$(v_Color_KPI_Gray_230)' & chr(39) ,
+      'if(isnull('&_KPI_EXP_ITF%&') or '&_KPI_FORECAST_FLAG&'=0 ,v_Color_KPI_Gray_230,
+      if('&_KPI_EXP_ITF%&_KPI_COLOR_GREEN &' 					,v_Color_KPI_Green_Light,
+      if('&_KPI_EXP_ITF%&_KPI_COLOR_YELLOW&'					,v_Color_KPI_Yellow_Light,
+      if('&_KPI_EXP_ITF%&_KPI_COLOR_RED   &'					,v_Color_KPI_Red_Light,
+      v_Color_Chart_CY))))')
+      AS _KPI_COLOR_ITF_BACK,
+
+	 if(isnull(_KPI_COLOR_GREEN),chr(39) & '$(v_Color_Chart_CY)' & chr(39) ,
+     'if(isnull('&_KPI_EXP_ITF%&') or '&_KPI_FORECAST_FLAG&'=0 , v_Color_KPI_Gray_123,
+      if('&_KPI_EXP_ITF%&_KPI_COLOR_GREEN &'					,v_Color_KPI_Green,
+      if('&_KPI_EXP_ITF%&_KPI_COLOR_YELLOW&'					,v_Color_KPI_Yellow,
+      if('&_KPI_EXP_ITF%&_KPI_COLOR_RED   &'					,v_Color_KPI_Red,
+      v_Color_Chart_CY))))')
+      AS _KPI_COLOR_ITF_FONT,       
+     
+     /////////////// TABLE BREAKDOWN  KPI
+
+      if(isnull(_KPI_COLOR_GREEN),chr(39) & '$(v_Color_Chart_CY)' & chr(39) ,
+      'if((column(1)/column(2))*100'&_KPI_COLOR_GREEN &',v_Color_KPI_Green,
+      if((column(1)/column(2))*100'&_KPI_COLOR_YELLOW&',v_Color_KPI_Yellow,
+      if((column(1)/column(2))*100'&_KPI_COLOR_RED   &',v_Color_KPI_Red,
+      v_Color_Chart_CY)))') 
+      AS _KPI_COLOR_CHART_C1C2,
+
+      if(isnull(_KPI_COLOR_GREEN),chr(39) & '$(v_Color_KPI_Gray_230)' & chr(39) ,
+ 	 'if(column(3)'&_KPI_COLOR_GREEN &',v_Color_KPI_Green_Light,
+      if(column(3)'&_KPI_COLOR_YELLOW&',v_Color_KPI_Yellow_Light,
+      if(column(3)'&_KPI_COLOR_RED   &',v_Color_KPI_Red_Light,
+      v_Color_Chart_CY)))')
+      AS _KPI_COLOR_TABLE_C3_BACK,
+
+      if(isnull(_KPI_COLOR_GREEN),chr(39) & '$(v_Color_Chart_CY)' & chr(39) ,
+     'if(column(3)'&_KPI_COLOR_GREEN &',v_Color_KPI_Green,
+      if(column(3)'&_KPI_COLOR_YELLOW&',v_Color_KPI_Yellow,
+      if(column(3)'&_KPI_COLOR_RED   &',v_Color_KPI_Red,
+      v_Color_Chart_CY)))')
+      AS _KPI_COLOR_TABLE_C3_FONT,     
+
+      if(isnull(_KPI_COLOR_GREEN),chr(39) & '$(v_Color_KPI_Gray_230)' & chr(39) ,
+     'if(column(5)'&_KPI_COLOR_GREEN &',v_Color_KPI_Green_Light,
+      if(column(5)'&_KPI_COLOR_YELLOW&',v_Color_KPI_Yellow_Light,
+      if(column(5)'&_KPI_COLOR_RED   &',v_Color_KPI_Red_Light,
+      v_Color_Chart_CY)))')  
+      AS _KPI_COLOR_TABLE_C5_BACK,
+
+      if(isnull(_KPI_COLOR_GREEN),chr(39) & '$(v_Color_Chart_CY)' & chr(39) ,
+     'if(column(5)'&_KPI_COLOR_GREEN &',v_Color_KPI_Green,
+      if(column(5)'&_KPI_COLOR_YELLOW&',v_Color_KPI_Yellow,
+      if(column(5)'&_KPI_COLOR_RED   &',v_Color_KPI_Red,
+      v_Color_Chart_CY)))') 
+      AS _KPI_COLOR_TABLE_C5_FONT,
+      
+    /////////////// TABLE TIME COMPARISON
+
+
+      if(isnull(_KPI_COLOR_GREEN),chr(39) & '$(v_Color_KPI_Gray_230)' & chr(39) ,
+ 	 'if([P1 - ITPY]'&_KPI_COLOR_GREEN &',v_Color_KPI_Green_Light,
+      if([P1 - ITPY]'&_KPI_COLOR_YELLOW&',v_Color_KPI_Yellow_Light,
+      if([P1 - ITPY]'&_KPI_COLOR_RED   &',v_Color_KPI_Red_Light,
+      v_Color_Chart_CY)))')
+      AS _KPI_COLOR_TABLE_P1_ITPY_BACK,
+
+      if(isnull(_KPI_COLOR_GREEN),chr(39) & '$(v_Color_Chart_CY)' & chr(39) ,
+     'if([P1 - ITPY]'&_KPI_COLOR_GREEN &',v_Color_KPI_Green,
+      if([P1 - ITPY]'&_KPI_COLOR_YELLOW&',v_Color_KPI_Yellow,
+      if([P1 - ITPY]'&_KPI_COLOR_RED   &',v_Color_KPI_Red,
+      v_Color_Chart_CY)))')
+      AS _KPI_COLOR_TABLE_P1_ITPY_FONT,           
+
+      if(isnull(_KPI_COLOR_GREEN),chr(39) & '$(v_Color_KPI_Gray_230)' & chr(39) ,
+ 	 'if([P2 - ITPY]'&_KPI_COLOR_GREEN &',v_Color_KPI_Green_Light,
+      if([P2 - ITPY]'&_KPI_COLOR_YELLOW&',v_Color_KPI_Yellow_Light,
+      if([P2 - ITPY]'&_KPI_COLOR_RED   &',v_Color_KPI_Red_Light,
+      v_Color_Chart_CY)))')
+      AS _KPI_COLOR_TABLE_P2_ITPY_BACK,
+
+      if(isnull(_KPI_COLOR_GREEN),chr(39) & '$(v_Color_Chart_CY)' & chr(39) ,
+     'if([P2 - ITPY]'&_KPI_COLOR_GREEN &',v_Color_KPI_Green,
+      if([P2 - ITPY]'&_KPI_COLOR_YELLOW&',v_Color_KPI_Yellow,
+      if([P2 - ITPY]'&_KPI_COLOR_RED   &',v_Color_KPI_Red,
+      v_Color_Chart_CY)))') 
+      AS _KPI_COLOR_TABLE_P2_ITPY_FONT,  
+
+      if(isnull(_KPI_COLOR_GREEN),chr(39) & '$(v_Color_KPI_Gray_230)' & chr(39) ,
+ 	 'if([P1 - ITF]'&_KPI_COLOR_GREEN &',v_Color_KPI_Green_Light,
+      if([P1 - ITF]'&_KPI_COLOR_YELLOW&',v_Color_KPI_Yellow_Light,
+      if([P1 - ITF]'&_KPI_COLOR_RED   &',v_Color_KPI_Red_Light,
+      v_Color_Chart_CY)))')
+      AS _KPI_COLOR_TABLE_P1_ITF_BACK,
+
+      if(isnull(_KPI_COLOR_GREEN),chr(39) & '$(v_Color_Chart_CY)' & chr(39) ,
+     'if([P1 - ITF]'&_KPI_COLOR_GREEN &',v_Color_KPI_Green,
+      if([P1 - ITF]'&_KPI_COLOR_YELLOW&',v_Color_KPI_Yellow,
+      if([P1 - ITF]'&_KPI_COLOR_RED   &',v_Color_KPI_Red,
+      v_Color_Chart_CY)))') 
+      AS _KPI_COLOR_TABLE_P1_ITF_FONT,          
+
+      if(isnull(_KPI_COLOR_GREEN),chr(39) & '$(v_Color_KPI_Gray_230)' & chr(39) ,
+ 	 'if([P2 - ITF]'&_KPI_COLOR_GREEN &',v_Color_KPI_Green_Light,
+      if([P2 - ITF]'&_KPI_COLOR_YELLOW&',v_Color_KPI_Yellow_Light,
+      if([P2 - ITF]'&_KPI_COLOR_RED   &',v_Color_KPI_Red_Light,
+      v_Color_Chart_CY)))')
+      AS _KPI_COLOR_TABLE_P2_ITF_BACK,
+
+      if(isnull(_KPI_COLOR_GREEN),chr(39) & '$(v_Color_Chart_CY)' & chr(39) ,
+     'if([P2 - ITF]'&_KPI_COLOR_GREEN &',v_Color_KPI_Green,
+      if([P2 - ITF]'&_KPI_COLOR_YELLOW&',v_Color_KPI_Yellow,
+      if([P2 - ITF]'&_KPI_COLOR_RED   &',v_Color_KPI_Red,
+      v_Color_Chart_CY)))') 
+      AS _KPI_COLOR_TABLE_P2_ITF_FONT;
+ 
+LOAD *,
+
+    'if(isnull('&_KPI_EXP_ITPY%&') or ('&_KPI_EXP_ITPY%&')=0,'& chr(39) & 'N/A' & chr(39)&',    
+    NUM('&'(('&_KPI_EXP_L12M&')/('&_KPI_EXP_PL12M&'))*100'& ','& chr(39) &'0'& chr(39) &')&' 
+    & 
+    if(LEFT(RIGHT(_KPI_FORMAT,2),1)='%',  'NUM('&'(('&_KPI_EXP_L12M&')-('&_KPI_EXP_PL12M&'))*100'& ','   & chr(39) &' (0.0pts)'& chr(39),
+    if(LEFT(RIGHT(_KPI_FORMAT,4),3)='0.0',  'NUM('&'(('&_KPI_EXP_L12M&')-('&_KPI_EXP_PL12M&'))'& ',' & chr(39) &' (#,##0.0)'& chr(39),      
+    'NUM('&'(('&_KPI_EXP_L12M&')-('&_KPI_EXP_PL12M&'))'& ',' & chr(39) &' (#,##0)'& chr(39)
+      ))  
+    & '))'
+
+    as _KPI_EXP_ITPY%#,
+    
+    IF(_KPI_FORECAST_FLAG=0,chr(39) & 'N/A' & chr(39),
+    'if(isnull('&_KPI_EXP_ITF%&') or ('&_KPI_EXP_ITF%&')=0,'& chr(39) & 'N/A' & chr(39)&',
+    NUM('&'(('&_KPI_EXP_L12M&')/('&_KPI_EXP_FL12M&'))*100'& ','& chr(39) &'0'& chr(39) &')&' 
+    & 
+    if(LEFT(RIGHT(_KPI_FORMAT,2),1)='%',  'NUM('&'(('&_KPI_EXP_L12M&')-('&_KPI_EXP_FL12M&'))*100'& ','   & chr(39) &' (0.0pts)'& chr(39),
+    if(LEFT(RIGHT(_KPI_FORMAT,4),3)='0.0',  'NUM('&'(('&_KPI_EXP_L12M&')-('&_KPI_EXP_FL12M&'))'& ',' & chr(39) &' (#,##0.0)'& chr(39),      
+    'NUM('&'(('&_KPI_EXP_L12M&')-('&_KPI_EXP_FL12M&'))'& ',' & chr(39) &' (#,##0)'& chr(39)
+      ))  
+    & '))')
+    
+    as _KPI_EXP_ITF%#;
+ 
+LOAD
+
+	*,
+    
+	'NUM('&'(('&_KPI_EXP_L12M&')/('&_KPI_EXP_PL12M&'))*100'& ',' & '0' & ')'	 as _KPI_EXP_ITPY%,
+    '(('&_KPI_EXP_CALENDAR_2_L12M&')/('&_KPI_EXP_CALENDAR_2_PL12M&'))*100'     	 as _KPI_EXP_CALENDAR_2_ITPY%,
+    'NUM('&'(('&_KPI_EXP_L12M&')/('&_KPI_EXP_FL12M&'))*100'& ',' & '0' & ')'	 as _KPI_EXP_ITF%,    
+    '(('&_KPI_EXP_CALENDAR_2_L12M&')/('&_KPI_EXP_CALENDAR_2_FL12M&'))*100'       as _KPI_EXP_CALENDAR_2_ITF%;
+    //'(('&_WTD_EXP&')/('&_PWTD&'))*100'    										     as _WOW_INDEX;
+    
+
+    
+LOAD
+
+    # 							as _KPI_ID,
+    LABEL   					as _KPI_LABEL,
+    FORMAT  	 				as _KPI_FORMAT,
+    TOOLTIP 	 				as _KPI_TOOLTIP,
+    IF(ISNULL(FORECAST),0,1)	as _KPI_FORECAST_FLAG,	
+    
+    'NUM('&EXPRESSION& ',' & FORMAT & ')'
+    AS _EXP_CALL,
+    
+    DATA_TYPE &'(('&Replace(EXPRESSION,'SetAnalysis','clndr_week_start_date={"'&'$'&'(=Max(clndr_week_start_date))"}')&')/('&Replace(EXPRESSION,'SetAnalysis','clndr_week_start_date={"'&'$'&'(=Max(clndr_week_start_date,2))"}')& ')*100,' & WOW_INDEX_FORMAT & ')'
+    AS _WOW_CALL,
+    
+    DATA_TYPE &'('&Replace(EXPRESSION,'SetAnalysis','clndr_month_start_date={"'&'$'&'(=Max(clndr_month_start_date))"}')& ',' & FORMAT & ')'
+    AS _MTD_CALL,
+    
+    DATA_TYPE &'('&Replace(EXPRESSION,'SetAnalysis','fiscal_qtr_start_dt={"'&'$'&'(=Max(fiscal_qtr_start_dt))"}')& ',' & FORMAT & ')'
+    AS _QTD_CALL,
+    
+    DATA_TYPE &'('&Replace(EXPRESSION,'SetAnalysis','fiscal_year={"'&'$'&'(=Max(fiscal_year))"}')& ',' & FORMAT & ')'
+    AS _YTD_CALL,
+    
+    DATA_TYPE &'('&Replace(EXPRESSION,'SetAnalysis','clndr_week_start_date={">='&'$'&'(=WeekStart(Max(clndr_week_start_date),-12))"}')& ',' & FORMAT & ')'
+    AS _LAST_YEAR_CALL,
+    
+    DATA_TYPE &'('&Replace(EXPRESSION,'SetAnalysis','WeekRank = {1}')& ',' & FORMAT & ')'
+    AS _WEEK_1,
+    
+    DATA_TYPE &'('&Replace(EXPRESSION,'SetAnalysis','WeekRank = {2}')& ',' & FORMAT & ')'   
+    AS _WEEK_2,
+    
+    DATA_TYPE &'('&Replace(EXPRESSION,'SetAnalysis','WeekRank = {3}')& ',' & FORMAT & ')'   
+    AS _WEEK_3,
+    
+    DATA_TYPE &'('&Replace(EXPRESSION,'SetAnalysis','WeekRank = {4}')& ',' & FORMAT & ')'   
+    AS _WEEK_4,
+    
+    DATA_TYPE &'('&Replace(EXPRESSION,'SetAnalysis','WeekRank = {5}')& ',' & FORMAT & ')'   
+    AS _WEEK_5,
+    
+    DATA_TYPE &'('&Replace(EXPRESSION,'SetAnalysis','WeekRank = {6}')& ',' & FORMAT & ')'   
+    AS _WEEK_6,
+    
+    DATA_TYPE &'('&Replace(EXPRESSION,'SetAnalysis','WeekRank = {7}')& ',' & FORMAT & ')'   
+    AS _WEEK_7,
+    
+    DATA_TYPE &'('&Replace(EXPRESSION,'SetAnalysis','WeekRank = {8}')& ',' & FORMAT & ')'   
+    AS _WEEK_8,
+    
+    DATA_TYPE &'('&Replace(EXPRESSION,'SetAnalysis','WeekRank = {9}')& ',' & FORMAT & ')'   
+    AS _WEEK_9,
+    
+    DATA_TYPE &'('&Replace(EXPRESSION,'SetAnalysis','WeekRank = {10}')& ',' & FORMAT & ')'   
+    AS _WEEK_10,
+    
+    DATA_TYPE &'('&Replace(EXPRESSION,'SetAnalysis','WeekRank = {11}')& ',' & FORMAT & ')'   
+    AS _WEEK_11,
+    
+    DATA_TYPE &'('&Replace(EXPRESSION,'SetAnalysis','WeekRank = {12}')& ',' & FORMAT & ')'   
+    AS _WEEK_12,
+    
+    DATA_TYPE &'('&Replace(EXPRESSION,'SetAnalysis','WeekRank = {13}')& ',' & FORMAT & ')'   
+    AS _WEEK_13,
+    
+    
+    //'NUM('&
+    //Replace(EXPRESSION,'SetAnalysis', WTD)
+    //AS _WTD_EXP,
+    
+    //'NUM('&Replace(EXPRESSION,'SetAnalysis','Flag_PL12M={1},Quarter=, Month=, Week=, Day=, Date=, _Date_1={$' & '(v_Exp_Date_MinMax_PY)}') & ',' & FORMAT & ')'
+    //AS _PWTD,
+       
+    'NUM('&Replace(EXPRESSION,'SetAnalysis','_BREAKDOWN_KPI_LABEL=, _BREAKDOWN_KPI_ORDER=, Flag_L12M={1}')& ',' & FORMAT & ')'   
+    AS _KPI_EXP_BREAKDOWN_TABLE_L12M,
+    
+    'NUM('&Replace(EXPRESSION,'SetAnalysis','_BREAKDOWN_KPI_LABEL=, _BREAKDOWN_KPI_ORDER=, Flag_PL12M={1},Quarter=, Month=, Week=, Day=, Date=, _Date_1={$' & '(v_Exp_Date_MinMax_PY)}') & ',' & FORMAT & ')'
+    AS _KPI_EXP_BREAKDOWN_TABLE_PL12M,
+    
+     IF(ISNULL(FORECAST),chr(39) & 'N/A' & chr(39),
+    'NUM('&Replace(FORECAST  ,'SetAnalysis','_BREAKDOWN_KPI_LABEL=, _BREAKDOWN_KPI_ORDER=, Flag_L12M={1}')& ',' & FORMAT & ')')
+    AS _KPI_EXP_BREAKDOWN_TABLE_FL12M,
+
+    'NUM('&Replace(EXPRESSION,'SetAnalysis','Flag_L12M={1}')& ',' & FORMAT & ')'
+    AS _KPI_EXP_L12M,
+    
+    'NUM('&Replace(EXPRESSION,'SetAnalysis','Flag_PL12M={1},Quarter=, Month=, Week=, Day=, Date=, _Date_1={$' & '(v_Exp_Date_MinMax_PY)}') & ',' & FORMAT & ')'
+    AS _KPI_EXP_PL12M,
+    
+    IF(ISNULL(FORECAST),chr(39) & 'N/A' & chr(39),
+    'NUM('&Replace(FORECAST  ,'SetAnalysis','Flag_L12M={1}')& ',' & FORMAT & ')')
+    AS _KPI_EXP_FL12M,
+
+    'NUM('&Replace(EXPRESSION,'SetAnalysis','Flag_L12M={1},Quarter=, Month=, Week=, Day=,  Date=P(_Date_2)')& ',' & FORMAT & ')'
+    AS _KPI_EXP_CALENDAR_2_L12M,
+    
+    'NUM('&Replace(EXPRESSION,'SetAnalysis','Flag_PL12M={1},Quarter=, Month=, Week=, Day=, Date=P(_Date_PY_2)') & ',' & FORMAT & ')'  
+    AS _KPI_EXP_CALENDAR_2_PL12M,
+    
+    'NUM('&Replace(FORECAST  ,'SetAnalysis','Flag_L12M={1},Quarter=, Month=, Week=, Day=,  Date=P(_Date_2)')   & ',' & FORMAT & ')'
+    AS _KPI_EXP_CALENDAR_2_FL12M,
+
+    KPI_Overview 				as _KPI_ORDER_OVERVIEW,
+    KPI_Time_Comparison 		as _KPI_ORDER_TIME,
+    KPI_Breakdown				as _KPI_ORDER_BREAKDOWN,
+    
+    GREEN 	as _KPI_COLOR_GREEN,
+    YELLOW 	as _KPI_COLOR_YELLOW,
+    RED 	as _KPI_COLOR_RED  
+    
+ FROM [$(v_Script_config_File)]
+(URL IS 
+[http://localhost:5555/data?connectorID=GoogleDriveConnector&table=GetWorksheetV2&encrypted_refresh_token=sta_gen_1%3alpIHyZYs77VPn4%2flkkV55Q%3d%3d%3aQvmCdOGWwyi1rK2uTcznTa9%2f9B5yqsIGZbrGLCXUy%2bT2RGyYimi%2fJ%2fC%2fK4GlgARwvCtfmthHisqbO8HLYDblebCbO1tBgxBx7jrtMz57zBBdjmPsd0iBVG2tHkuEKMJ6JqJvWLuvkcQQa3lpI5tilQ%3d%3d&worksheetKey=1RXZdtv6NlKtZ6faqJaUyIFolq4fqyE-8milTCJLuoPg%3a_764988339&appID=]
+, qvx);
+//KPI_Sheet
+
+
+//Concatenating the expressions
+CONFIG_KPI_CONCAT_BREAKDOWN: 
+LOAD
+
+		Concat(_KPI_EXP_BREAKDOWN_TABLE_L12M,',',  _KPI_ORDER_BREAKDOWN) 	As KPI_L12M_BREAKDOWN_Concat,
+        Concat(_KPI_EXP_BREAKDOWN_TABLE_PL12M,',', _KPI_ORDER_BREAKDOWN)	As KPI_PL12M_BREAKDOWN_Concat,
+        Concat(_KPI_EXP_BREAKDOWN_TABLE_FL12M,',', _KPI_ORDER_BREAKDOWN)	As KPI_FL12M_BREAKDOWN_Concat,        
+        Concat(_KPI_COLOR_TABLE_C3_BACK,',',     _KPI_ORDER_BREAKDOWN) 	As KPI_COLOR_TABLE_C3_BACK_Concat,
+        Concat(_KPI_COLOR_TABLE_C3_FONT,',',     _KPI_ORDER_BREAKDOWN) 	As KPI_COLOR_TABLE_C3_FONT_Concat,
+        Concat(_KPI_COLOR_TABLE_C5_BACK,',',     _KPI_ORDER_BREAKDOWN) 	As KPI_COLOR_TABLE_C5_BACK_Concat,
+        Concat(_KPI_COLOR_TABLE_C5_FONT,',',     _KPI_ORDER_BREAKDOWN) 	As KPI_COLOR_TABLE_C5_FONT_Concat
+        
+Resident CONFIG_KPI
+WHERE _KPI_ORDER_BREAKDOWN>0; 
+
+
+//Variable used in Expression
+Let v_KPI_EXP_BREAKDOWN_TABLE_L12M  	= 'Pick(only( {<_BREAKDOWN_KPI_LABEL=, _BREAKDOWN_KPI_ORDER=>} _BREAKDOWN_KPI_ORDER),' & Peek('KPI_L12M_BREAKDOWN_Concat') & ')';
+Let v_KPI_EXP_BREAKDOWN_TABLE_PL12M	 	= 'Pick(only( {<_BREAKDOWN_KPI_LABEL=, _BREAKDOWN_KPI_ORDER=>} _BREAKDOWN_KPI_ORDER),' & Peek('KPI_PL12M_BREAKDOWN_Concat') & ')';
+Let v_KPI_EXP_BREAKDOWN_TABLE_FL12M	 	= 'Pick(only( {<_BREAKDOWN_KPI_LABEL=, _BREAKDOWN_KPI_ORDER=>} _BREAKDOWN_KPI_ORDER),' & Peek('KPI_FL12M_BREAKDOWN_Concat') & ')';
+
+Let v_KPI_COLOR_BREAKDOWN_TABLE_C3_BACK = 'Pick(only( {<_BREAKDOWN_KPI_LABEL=, _BREAKDOWN_KPI_ORDER=>} _BREAKDOWN_KPI_ORDER),' & Peek('KPI_COLOR_TABLE_C3_BACK_Concat') & ')';
+Let v_KPI_COLOR_BREAKDOWN_TABLE_C3_FONT = 'Pick(only( {<_BREAKDOWN_KPI_LABEL=, _BREAKDOWN_KPI_ORDER=>} _BREAKDOWN_KPI_ORDER),' & Peek('KPI_COLOR_TABLE_C3_FONT_Concat') & ')';
+
+Let v_KPI_COLOR_BREAKDOWN_TABLE_C5_BACK = 'Pick(only( {<_BREAKDOWN_KPI_LABEL=, _BREAKDOWN_KPI_ORDER=>} _BREAKDOWN_KPI_ORDER),' & Peek('KPI_COLOR_TABLE_C5_BACK_Concat') & ')';
+Let v_KPI_COLOR_BREAKDOWN_TABLE_C5_FONT = 'Pick(only( {<_BREAKDOWN_KPI_LABEL=, _BREAKDOWN_KPI_ORDER=>} _BREAKDOWN_KPI_ORDER),' & Peek('KPI_COLOR_TABLE_C5_FONT_Concat') & ')';
+
+drop table CONFIG_KPI_CONCAT_BREAKDOWN;
+
+
+       
+         
+// KPITrendMeasures:
+// load * inline [
+// Exec_Metrics
+// Forecasted Demand
+// Actual Demand
+// Phone AHT Forecast
+// Actual Phone AHT
+// Messaging AHT Forecast
+// Actual Messaging AHT
+// ASA Actuals
+// Transfer Rate
+// Issue Resolution Rate
+// tNPS
+// ]
+
+
+// ;          
