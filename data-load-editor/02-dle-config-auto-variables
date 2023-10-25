@@ -1,0 +1,81 @@
+/* Config-Auto-Variables */
+
+/////////////////////////////// ***************************************************************///////////////////////////////
+/////////////////////////////// ************************** Admin ******************************///////////////////////////////
+/////////////////////////////// ***************************************************************///////////////////////////////
+
+Set HidePrefix = '_';
+
+/////////////////////////////// ***************************************************************///////////////////////////////
+/////////////////////////////// ************************** Admin ******************************//////////////////////////////
+/////////////////////////////// ***************************************************************///////////////////////////////
+
+Let v_Script_CurrentDate=num(date(Today(),'MM/DD/YYYY'))-1;
+
+/////////////////////////////// ***************************************************************///////////////////////////////
+/////////////////////////////// ************************** Design ******************************//////////////////////////////
+
+//Load config file from Google Sheet Location
+Config_Dashboard:
+LOAD
+    [Dashboard Name] as "Dashboard Name", 
+    [Index To PY] as "Index To PY",
+    [Index To Forecast] as "Index To Forecast",
+    Design as "Design"
+FROM [$(v_Script_config_File)]
+(URL IS 
+[http://localhost:5555/data?connectorID=GoogleDriveConnector&table=GetWorksheetV2&encrypted_refresh_token=sta_gen_1%3alpIHyZYs77VPn4%2flkkV55Q%3d%3d%3aQvmCdOGWwyi1rK2uTcznTa9%2f9B5yqsIGZbrGLCXUy%2bT2RGyYimi%2fJ%2fC%2fK4GlgARwvCtfmthHisqbO8HLYDblebCbO1tBgxBx7jrtMz57zBBdjmPsd0iBVG2tHkuEKMJ6JqJvWLuvkcQQa3lpI5tilQ%3d%3d&worksheetKey=1RXZdtv6NlKtZ6faqJaUyIFolq4fqyE-8milTCJLuoPg%3a_401168337&appID=]
+, qvx);
+
+//Dashboard_Sheet
+
+Config_Overview:
+LOAD
+    max(KPI_Overview) As Overview_Max_KPI    
+FROM [$(v_Script_config_File)]
+(URL IS 
+[http://localhost:5555/data?connectorID=GoogleDriveConnector&table=GetWorksheetV2&encrypted_refresh_token=sta_gen_1%3alpIHyZYs77VPn4%2flkkV55Q%3d%3d%3aQvmCdOGWwyi1rK2uTcznTa9%2f9B5yqsIGZbrGLCXUy%2bT2RGyYimi%2fJ%2fC%2fK4GlgARwvCtfmthHisqbO8HLYDblebCbO1tBgxBx7jrtMz57zBBdjmPsd0iBVG2tHkuEKMJ6JqJvWLuvkcQQa3lpI5tilQ%3d%3d&worksheetKey=1RXZdtv6NlKtZ6faqJaUyIFolq4fqyE-8milTCJLuoPg%3a_764988339&appID=]
+, qvx);
+//KPI_Sheet
+
+Let v_Design_Dashboard_Name	= peek('Dashboard Name', 0, 'Config_Dashboard');
+Let v_Design_Color_Type		= peek('Design', 0, 'Config_Dashboard');
+let v_Design_Show_ITPY		= IF(peek('Index To PY', 0, 'Config_Dashboard')='YES',1,0);
+let v_Design_Show_ITF		= IF(peek('Index To Forecast', 0, 'Config_Dashboard')='YES',1,0);
+let v_Design_KPI_Index		= IF(v_Design_Show_ITPY=1 AND v_Design_Show_ITF=1,4,IF(v_Design_Show_ITPY=1 OR v_Design_Show_ITF=1,3,2));
+let v_Design_Sheet=1;
+let v_Design_Overview_KPI=1;
+let v_Design_Breakdown_KPI='=min(_BREAKDOWN_KPI_ID)';
+let v_Design_Overview_Max_KPI = Peek('Overview_Max_KPI');
+
+Drop Table Config_Overview;
+Drop Table Config_Dashboard;
+
+let v_Design_Selection= 
+'=replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
+GetCurrentSelections('&CHR(39)&'+'&CHR(39)&', '&CHR(39)&': '&CHR(39)&', '&CHR(39)&','&CHR(39)&'), 
+GetFieldSelections(Date,'&CHR(39)&','&CHR(39)&'),'&CHR(39)&''&CHR(39)&'),
+GetFieldSelections(Day,'&CHR(39)&','&CHR(39)&'),'&CHR(39)&''&CHR(39)&'),
+GetFieldSelections(Week,'&CHR(39)&','&CHR(39)&'),'&CHR(39)&''&CHR(39)&'),
+GetFieldSelections(Month,'&CHR(39)&','&CHR(39)&'),'&CHR(39)&''&CHR(39)&'),
+GetFieldSelections(Quarter,'&CHR(39)&','&CHR(39)&'),'&CHR(39)&''&CHR(39)&')
+,'&CHR(39)&'Date:'&CHR(39)&','&CHR(39)&''&CHR(39)&')
+,'&CHR(39)&'Day:'&CHR(39)&','&CHR(39)&''&CHR(39)&')
+,'&CHR(39)&'Week:'&CHR(39)&','&CHR(39)&''&CHR(39)&')
+,'&CHR(39)&'Month:'&CHR(39)&','&CHR(39)&''&CHR(39)&')
+,'&CHR(39)&'Quarter:'&CHR(39)&','&CHR(39)&''&CHR(39)&')
+,'&CHR(39)&'+'&CHR(39)&','&CHR(39)&'|'&CHR(39)&')';
+
+
+/////////////////////////////// ***************************************************************///////////////////////////////
+/////////////////////////////// ************************** Dates ******************************///////////////////////////////
+/////////////////////////////// ***************************************************************///////////////////////////////
+
+let v_Exp_Date_Selected ='=if(GetSelectedCount(Week)>0 or GetSelectedCount(Month)>0  or GetSelectedCount(Quarter)>0 or GetSelectedCount(Day)>0,' & chr(39) & '"'&chr(39)&'&concat(distinct {<Flag_L12M={1}>} Date,'&chr(39)&'","'&chr(39)&')&'&chr(39)&'"' & chr(39)& ','
+                         &'if(GetSelectedCount(Date)=0,' & chr(39) &'*' & chr(39) & ','
+                         & chr(39) & '"'&chr(39)&'&GetFieldSelections(Date,'&chr(39)&'","'&chr(39)&',365)&'&chr(39)&'"' & chr(39)&'))';
+let v_Exp_Date_Min='=' & 'MIN({1<Flag_L12M={1},Date={$' & '(v_Exp_Date_Selected)}>} Date)';
+let v_Exp_Date_Max='=' & 'MAX({1<Flag_L12M={1},Date={$' & '(v_Exp_Date_Selected)}>} Date)';
+let v_Exp_Date_Min_PY='addyears(v_Exp_Date_Min,-1)';
+let v_Exp_Date_Max_PY='addyears(v_Exp_Date_Max,-1)';
+let v_Exp_Date_MinMax_PY='=' & chr(39)&'">=' & chr(39) & '& $' & '(v_Exp_Date_Min_PY)'& ' & ' & chr(39) &'<=' & chr(39) & '& $' & '(v_Exp_Date_Max_PY)&' & chr(39) & '"' & chr(39);
