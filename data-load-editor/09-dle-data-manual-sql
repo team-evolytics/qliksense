@@ -1,11 +1,11 @@
 // DATA - Manual SQL
 
-LIB CONNECT TO 'Athena SBGAN Longtail';
+//LIB CONNECT TO 'Data Warehouse Location';
 
 /* Initial Data Load Step or Refresh changes to source data */
 Main:
 
-Load *
+LOAD * from [lib://Shared
 ;
 
 SQL
@@ -13,7 +13,7 @@ SQL
 select * from dlprd.sbg_published.product_support_dashboard where fiscal_year>=2023;
 
 /* Store loaded data into QVD...this is like your data extract in Tableau */
-Store Main into [lib://Shared/0.ExtractQVD/CS_ProductSupport_ExecDashboard.qvd] (qvd);
+Store Main into [qvd path here] (qvd);
 
 /* Switch over to pull from qvd to speed up config or updates that don't require data source structure updates */
 
@@ -21,7 +21,7 @@ Store Main into [lib://Shared/0.ExtractQVD/CS_ProductSupport_ExecDashboard.qvd] 
 Main:
 Load
 *
-FROM [lib://Shared/0.ExtractQVD/CS_ProductSupport_ExecDashboard.qvd] (qvd);
+FROM [qvd path here] (qvd);
 */
 
 
