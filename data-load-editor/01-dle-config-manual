@@ -1,3 +1,5 @@
 // Config - Manual
+//Here we create a variable for the web connector link.
+//If we need to change the web connector link, then we would only need to change in this variable instead of all of the calls.
 
 LET v_Script_config_File = 'lib://Web Connectors';
